@@ -1,16 +1,65 @@
 .data
-vetor1: .word 5 8 100
-vetor2: .word 50 2 100
 
-.text
-main: 
-	la a0, vetor1
-    la a1, vetor2
-    li a2, 3
-    jal ra, covariance
-    j exit
+##### R1 START MODIFIQUE AQUI START #####
+
+#
+# Este espaço é para você definir as suas constantes e vetores auxiliares.
+#
+
+vetor1: .word 1 2 3 4 #Primeiro vetor
+vetor2: .word 1 1 1 1 #Segundo vetor
+
+##### R1 END MODIFIQUE AQUI END #####
+      
+.text	
+		add s0, zero, zero
+        la a0, vetor1
+        addi a1, zero, 4
+        jal ra, media
+        addi t0, zero, 2
+        bne a0,t0,teste2
+        addi s0,s0,1
+teste2: la a0, vetor2
+        addi a1, zero, 4
+        jal ra, media
+        addi t0, zero, 1
+        bne a0,t0, FIM
+        addi s0,s0,1
+        beq zero,zero, FIM
+
+##### R2 START MODIFIQUE AQUI START #####
+
+# Esse espaço é para você escrever o código dos procedimentos. 
+# Por enquanto eles estão vazios
+
+media:
+	# configura stack
+    addi sp, sp, -4
+    sw s0, 0(sp)
     
-covariance:
+	li s0, 0
+    li t0, 0
+    whileMedia: bge t0, a1, doneMedia
+    	# realiza a soma de A[i] e armazena em s0, que contem as somas dos elementos anteriores
+    	slli t1, t0, 2
+        add t1, t1, a0
+        lw t1, 0(t1)
+        add s0, s0, t1
+        
+        # incrementa variavel de controle
+        addi t0, t0, 1
+        j whileMedia
+    doneMedia: 
+    	# divide soma pelo numero de elementos
+    	div a0, s0, a1
+        
+        # configura stack
+        lw s0, 0(sp)
+        addi sp, sp, 4
+        
+        jalr zero, 0(ra)
+        
+covariancia:
 	# configura stack
 	addi sp, sp, -24
     sw ra, 20(sp)
@@ -20,22 +69,23 @@ covariance:
     sw s1, 4(sp)
     sw s2, 0(sp)
     
-    add a1, a2, zero # inicializa 2º argumento com o numero de elementos
+    add a1, a2, zero # atribui numero de elementos ao 2º argumento
     
     # chama funcao mean para vetor1 e armazena sua media em s0
-    jal ra mean 
+    jal ra media 
     add s0, a0, zero
     
     # chama funcao mean para vetor2 e armazena sua media em s1
     lw a0, 16(sp)
-    jal ra mean
+    jal ra media
     add s1, a0, zero
     
+    # atribui endereço de vetor1 a a0 e endereço de vetor2 a a1
     lw a0, 12(sp)
     lw a1, 16(sp)
     li t0, 0
     li s2, 0
-    whileCovariance: bge t0, a2, doneCovariance
+    whileCovariancia: bge t0, a2, doneCovariancia
     	# subtrai media do vetor1 de vetor1[i]
         slli t1, t0, 2
         add t1, t1, a0
@@ -54,8 +104,8 @@ covariance:
         
         # incrementa variavel de controle
         addi t0, t0, 1
-        j whileCovariance
-    doneCovariance:
+        j whileCovariancia
+    doneCovariancia:
     	# calcula a covariancia e armazena em a0
     	addi t0, a2, -1
         div a0, s2, t0
@@ -68,32 +118,7 @@ covariance:
         addi sp, sp, 24
         
         jalr zero, 0(ra)
-    
-mean:
-	# configura stack
-	addi sp, sp, -4
-    sw s0, 0(sp)
-    
-	li s0, 0
-    li t0, 0
-    whileMean: bge t0, a1, doneMean
-    	# realiza a soma de todos os elementos do vetor e armazena em s0
-    	slli t1, t0, 2
-        add t1, t1, a0
-        lw t1, 0(t1)
-        add s0, s0, t1
-        
-        # incrementa variavel de controle
-        addi t0, t0, 1
-        j whileMean
-    doneMean: 
-    	# divide soma pelo numero de elementos
-    	div a0, s0, a1
-        
-        # configura stack
-        lw s0, 0(sp)
-        addi sp, sp, 4
-        
-        jalr zero, 0(ra)
-        
-exit: nop
+
+##### R2 END MODIFIQUE AQUI END #####
+
+FIM: add t0, zero, s0

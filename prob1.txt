@@ -1,47 +1,60 @@
 .data
+
+##### R1 START MODIFIQUE AQUI START #####
+#
+# Este espaço é para você definir as suas constantes e vetores auxiliares.
+#
+
 vetor: .word 1 2 3 4 5 6 7 8 9 10
 
+
+##### R1 END MODIFIQUE AQUI END #####
+
 .text
-        add s0, zero, zero # quantidade de testes em que seu programa passou
-teste1: la a0, vetor
+        add s0, zero, zero #Quantidade de testes em que seu programa passou
+        la a0, vetor
         addi a1, zero, 10
         addi a2, zero, 2
         jal ra, multiplos
         addi t0, zero, 5
-        bne a0, t0, teste2
-        addi s0, s0, 1
+        bne a0,t0,teste2
+        addi s0,s0,1
 teste2: la a0, vetor
         addi a1, zero, 10
         addi a2, zero, 3
         jal ra, multiplos
         addi t0, zero, 3
-        bne a0, t0, FIM
-        addi s0, s0, 1
-        j FIM
+        bne a0,t0, FIM
+        addi s0,s0,1
+        beq zero,zero,FIM
 
 ##### R2 START MODIFIQUE AQUI START #####
 
 multiplos:
+		# configura stack
 		addi sp, sp, -4
         sw s0, 0(sp)
 
-		li s0, 0 # armazena soma
-        li t0, 0 # controle do laço
-        
+		li s0, 0
+        li t0, 0
 		while: bge t0, a1, done
-        slli t1, t0, 2 # multiplica indice por 4 (offset)
-        add t1, t1, a0 # soma offset ao base address
-        lw t1, 0(t1) # armazena valor de vetor[i]
-        rem t1, t1, a2 # obtem resto da divisão de vetor[i] pelo valor analisado
+        # para cada A[i], armazena resto de sua divisão pelo numero analisado (a2) em t1
+        slli t1, t0, 2
+        add t1, t1, a0
+        lw t1, 0(t1)
+        rem t1, t1, a2
         
-        if: bne t1, zero, continue # se resto for diferente de zero, não contabiliza como multiplo
+        # se resto for igual a zero, contabiliza como multiplo (incrementa s0)
+        if: bne t1, zero, continue 
         addi s0, s0, 1
         
-		continue: addi t0, t0, 1 # incrementa controle
+        # incrementa variavel de controle
+		continue: addi t0, t0, 1 
         j while
         
         done: addi a0, s0, 0
         
+        # configura stack
         lw s0, 0(sp)
         addi sp, sp, 4
         
@@ -49,4 +62,4 @@ multiplos:
 
 ##### R2 END MODIFIQUE AQUI END #####
 
-FIM: nop
+FIM: addi t0, s0, 0

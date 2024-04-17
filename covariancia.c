@@ -5,9 +5,9 @@ int covariancia(int *a0, int *a1, int a2);
 
 int main()
 {
-  int a0[10] = {1, 2, 3, 4};     // vetor1
-  int a1[10] = {1, 10, 50, 100}; // vetor2
-  int a2 = 4;                    // quantidade de elementos
+  int a0[10] = {1, 2, 3, 4};
+  int a1[10] = {1, 10, 50, 100};
+  int a2 = 4;
 
   printf("covariancia: %d\n", covariancia(a0, a1, a2));
 

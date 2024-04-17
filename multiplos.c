@@ -4,9 +4,9 @@ int multiplos(int *a0, int a1, int a2);
 
 int main()
 {
-  int a0[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}; // vetor
-  int a1 = 10;                                  // quantidade de elementos
-  int a2 = 2;                                   // numero a ser verificado
+  int a0[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  int a1 = 10;
+  int a2 = 2;
 
   printf("multiplos: %d\n", multiplos(a0, a1, a2));
 
